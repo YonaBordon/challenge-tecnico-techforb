@@ -1,6 +1,8 @@
 package com.challenge.challengetecnicotechforb.Controllers;
 
 import com.challenge.challengetecnicotechforb.Security.Payload.LoginRequest;
+import com.challenge.challengetecnicotechforb.Security.Payload.LoginResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,9 +31,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<MessageResponse> loginUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(userService.loginUser(loginRequest));
     }
-
 
 }

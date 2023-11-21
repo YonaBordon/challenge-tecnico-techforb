@@ -3,6 +3,7 @@ package com.challenge.challengetecnicotechforb.Services;
 import com.challenge.challengetecnicotechforb.Entities.User;
 import com.challenge.challengetecnicotechforb.Repositories.UserRepository;
 import com.challenge.challengetecnicotechforb.Security.Payload.LoginRequest;
+import com.challenge.challengetecnicotechforb.Security.Payload.LoginResponse;
 import com.challenge.challengetecnicotechforb.Security.Payload.MessageResponse;
 import com.challenge.challengetecnicotechforb.Security.Payload.RegisterRequest;
 
@@ -33,21 +34,20 @@ public class UserService {
         }
 
         User user = new User(
-            request.getUsername(),
-            request.getEmail(),
-            passwordEncoder.encode(request.getPassword())
-        );
+                request.getUsername(),
+                request.getEmail(),
+                passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
 
         return new MessageResponse("User registered successfully!");
     }
 
-    public MessageResponse loginUser(LoginRequest request) {
-        System.out.println(request.getUsername() + " " + request.getPassword());
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+    public LoginResponse loginUser(LoginRequest request) {
+        authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         UserDetails userDetails = userRepository.findByUsername(request.getUsername()).orElseThrow();
         String token = jwtService.getToken(userDetails);
-        return new MessageResponse(token);
+        return new LoginResponse(token, "Bearer", userDetails.getUsername(), "User logged in successfully!");
     }
 
     public boolean existsByUsername(String username) {
