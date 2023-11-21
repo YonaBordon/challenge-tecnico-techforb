@@ -1,0 +1,46 @@
+@startuml Model
+
+class Account {
+  - id: Long
+  - balance: Double
+  - transactions: List<Transaction>
+  - cards: List<Card>
+}
+
+class Transaction {
+  - id: Long
+  - date: LocalDate
+  - amount: Double
+  - description: String
+}
+
+class Card {
+  - id: Long
+  - number: String
+  - expirationDate: LocalDate
+  - cvv: String
+  - account: Account
+}
+
+Account "1" o-- "n" Transaction
+Account "1" o-- "n" Card
+
+class TransferService {
+  - transfer(fromAccount: Account, toAccount: Account, amount: Double): void
+}
+
+class WithdrawalService {
+  - withdraw(account: Account, amount: Double): void
+}
+
+class DepositService {
+  - deposit(account: Account, amount: Double): void
+}
+
+TransferService -up-|> Account
+WithdrawalService -up-|> Account
+DepositService -up-|> Account
+
+
+
+@enduml

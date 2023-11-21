@@ -1,0 +1,19 @@
+@startuml UseCase
+
+actor Usuario
+
+usecase "Registrarse" as Registrarse
+usecase "Iniciar sesión" as IniciarSesion
+usecase "Ver balance" as VerBalance
+usecase "Realizar transferencia" as RealizarTransferencia
+usecase "Extraer dinero" as ExtraerDinero
+usecase "Depositar dinero" as DepositarDinero
+
+Usuario --> Registrarse
+Usuario --> IniciarSesion 
+IniciarSesion --> VerBalance 
+IniciarSesion --> RealizarTransferencia 
+IniciarSesion --> ExtraerDinero 
+IniciarSesion --> DepositarDinero
+
+@enduml
