@@ -23,6 +23,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final AccountService accountService;
 
     public MessageResponse registerUser(RegisterRequest request) {
         if (existsByUsername(request.getUsername())) {
@@ -38,6 +39,8 @@ public class UserService {
                 request.getEmail(),
                 passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
+
+        accountService.createAccount(user);
 
         return new MessageResponse("User registered successfully!");
     }
