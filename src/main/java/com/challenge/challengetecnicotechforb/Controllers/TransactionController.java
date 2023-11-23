@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.challenge.challengetecnicotechforb.Entities.Account;
-import com.challenge.challengetecnicotechforb.Entities.Transaction;
 import com.challenge.challengetecnicotechforb.Security.Payload.TransactionRequest;
 import com.challenge.challengetecnicotechforb.Security.Payload.TransactionResponse;
 import com.challenge.challengetecnicotechforb.Services.TransactionService;

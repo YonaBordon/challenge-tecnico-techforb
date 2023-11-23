@@ -56,4 +56,9 @@ public class AccountService {
     return accountRepository.findById(accountId);
   }
 
+  public String getBalance(String token) {
+    Account account = getAccountFromToken(token);
+    return account.getBalance().toString();
+  }
+
 }
