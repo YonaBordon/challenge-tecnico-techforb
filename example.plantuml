@@ -1,0 +1,112 @@
+@startuml Model
+
+entity User {
+  - id: Long
+  - username: String
+  - password: String
+  - accounts: List<Account>
+}
+
+entity Account {
+  - id: Long
+  - balance: Double
+  - transactions: List<Transaction>
+  - cards: List<Card>
+  - user: User
+}
+
+entity Transaction {
+  - id: Long
+  - date: LocalDate
+  - amount: Double
+  - description: String
+}
+
+entity Card {
+  - id: Long
+  - number: String
+  - expirationDate: LocalDate
+  - cvv: String
+  - account: Account
+}
+
+User "1" o-- "n" Account
+Account "1" o-- "n" Transaction
+Account "1" o-- "n" Card
+
+class TransferService {
+  - transfer(fromAccount: Account, toAccount: Account, amount: Double): void
+}
+
+class WithdrawalService {
+  - withdraw(account: Account, amount: Double): void
+}
+
+class DepositService {
+  - deposit(account: Account, amount: Double): void
+}
+
+class UserService {
+  - createUser(username: String, password: String): User
+  - getUser(id: Long): User
+}
+
+class AccountService {
+  - getAccount(id: Long): Account
+}
+
+class TransactionService {
+  - getTransactions(account: Account): List<Transaction>
+}
+
+class CardService {
+  - getCards(account: Account): List<Card>
+}
+
+class TransferController {
+  + transfer(fromAccountId: Long, toAccountId: Long, amount: Double): void
+}
+
+class WithdrawalController {
+  + withdraw(accountId: Long, amount: Double): void
+}
+
+class DepositController {
+  + deposit(accountId: Long, amount: Double): void
+}
+
+class UserController {
+  + createUser(username: String, password: String): User
+  + getUser(id: Long): User
+}
+
+class AccountController {
+  + getAccount(id: Long): Account
+}
+
+class TransactionController {
+  + getTransactions(accountId: Long): List<Transaction>
+}
+
+class CardController {
+  + getCards(accountId: Long): List<Card>
+}
+
+TransferService -up-|> Account
+WithdrawalService -up-|> Account
+DepositService -up-|> Account
+
+UserService -up-|> User
+AccountService -up-|> Account
+TransactionService -up-|> Transaction
+CardService -up-|> Card
+
+TransferController --> TransferService
+WithdrawalController --> WithdrawalService
+DepositController --> DepositService
+UserController --> UserService
+AccountController --> AccountService
+TransactionController --> TransactionService
+CardController --> CardService
+
+@enduml
