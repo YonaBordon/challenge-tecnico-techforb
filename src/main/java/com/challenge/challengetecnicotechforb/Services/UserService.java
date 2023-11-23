@@ -38,9 +38,9 @@ public class UserService {
                 request.getUsername(),
                 request.getEmail(),
                 passwordEncoder.encode(request.getPassword()));
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
-        accountService.createAccount(user);
+        accountService.createAccount(savedUser);
 
         return new MessageResponse("User registered successfully!");
     }

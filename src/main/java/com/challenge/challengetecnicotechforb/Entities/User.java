@@ -29,7 +29,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class User implements UserDetails {
 
-    @JsonIgnore
+    
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     @Column(name = "id")
@@ -46,7 +46,7 @@ public class User implements UserDetails {
     private String password;
 
     @OneToOne(mappedBy = "user")
-    private Account accounts;
+    private Account account;
 
     public User(String username, String email, String password) {
         this.username = username;

@@ -27,18 +27,14 @@ public class SecurityConfig {
     return http
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
-            authorize -> authorize.requestMatchers("/api/user/**").permitAll()
-                .anyRequest().authenticated()
-        )
-        .sessionManagement(sessionManager ->
-            sessionManager
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            authorize -> authorize.requestMatchers("/api/user/**", "/api/transaction").permitAll()
+                .anyRequest().authenticated())
+        .sessionManagement(sessionManager -> sessionManager
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authenticationProvider(authProvider)
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
 
-
   }
-
 
 }
