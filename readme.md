@@ -7,66 +7,63 @@ Este proyecto está construido con Spring Boot y utiliza MySQL para la base de d
 1. Clona el repositorio
 2. Accede a "localhost:8080" para usar
 
-
 ## Endpoints
 
 ### Controlador de Usuario
 
 - `POST /api/user/register`: Registra un nuevo usuario.
 
-
-```json
-{
-	"username": "exampleUser",
-	"email": "example@email.com",
-	"password": "examplePassword"
-}
-```
+  ```json
+  {
+  	"username": "exampleUser",
+  	"email": "example@email.com",
+  	"password": "examplePassword"
+  }
+  ```
 
 - `POST /api/user/login`: Inicia sesión con un usuario existente.
 
+  ```json
+  {
+  	"username": "exampleUser",
+  	"password": "examplePassword"
+  }
+  ```
 
-```json
-{
-	"username": "exampleUser",
-	"password": "examplePassword"
-}
-```
+- Respuesta de ejemplo:
 
-Respuesta de ejemplo:
-
-```json
-{
-	"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlVXNlciIsImlhdCI6MTYxNzYzNzI4MiwiZXhwIjoxNjE3NzIzNjgyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
-	"type": "Bearer",
-	"username": "exampleUser",
-	"message": "Login successful"
-}
-```
+  ```json
+  {
+  	"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJleGFtcGxlVXNlciIsImlhdCI6MTYxNzYzNzI4MiwiZXhwIjoxNjE3NzIzNjgyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+  	"type": "Bearer",
+  	"username": "exampleUser",
+  	"message": "Login successful"
+  }
+  ```
 
 ### Controlador de Transacciones
 
 - `POST /api/transaction`: Crea una nueva transacción.
 
-```json
-{
-	"idDestino": "destinationAccountId",
-	"monto": 100.0,
-	"descripcion": "Transaction description"
-}
-```
+  ```json
+  {
+  	"idDestino": "destinationAccountId",
+  	"monto": 100.0,
+  	"descripcion": "Transaction description"
+  }
+  ```
 
-Respuesta de ejemplo:
+- Respuesta de ejemplo:
 
-```json
-{
-	"origen": "originAccountId",
-	"destino": "destinationAccountId",
-	"monto": 100.0,
-	"descripcion": "Transaction description",
-	"fecha": "2022-01-01T00:00:00.000+00:00"
-}
-```
+  ```json
+  {
+  	"origen": "originAccountId",
+  	"destino": "destinationAccountId",
+  	"monto": 100.0,
+  	"descripcion": "Transaction description",
+  	"fecha": "2022-01-01T00:00:00.000+00:00"
+  }
+  ```
 
 ## Tecnologías
 
@@ -75,4 +72,4 @@ Respuesta de ejemplo:
 - MySQL
 - Lombok
 - JSON Web Token (JWT)
-- Maven 
+- Maven
