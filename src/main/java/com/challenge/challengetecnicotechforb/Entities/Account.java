@@ -5,6 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
@@ -36,6 +38,7 @@ public class Account {
     private Timestamp updatedAt;
 
     @OneToMany(mappedBy = "account")
+    @JsonManagedReference
     private List<Transaction> transactions;
 
     public Account(User user) {

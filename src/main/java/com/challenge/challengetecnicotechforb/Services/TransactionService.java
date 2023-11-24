@@ -33,6 +33,7 @@ public class TransactionService {
     transaction.setAmount(amount.doubleValue());
     transaction.setDate(LocalDate.now());
     transaction.setDescription(description);
+    transaction.setDestinationAccount(destinationAccount);
 
     origin.setBalance(origin.getBalance().subtract(amount));
     destinationAccount.setBalance(destinationAccount.getBalance().add(amount));

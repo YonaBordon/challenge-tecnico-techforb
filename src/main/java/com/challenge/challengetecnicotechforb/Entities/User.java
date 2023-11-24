@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,6 +47,7 @@ public class User implements UserDetails {
     private String password;
 
     @OneToOne(mappedBy = "user")
+    @JsonManagedReference
     private Account account;
 
     public User(String username, String email, String password) {

@@ -2,14 +2,19 @@ package com.challenge.challengetecnicotechforb.Services;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.challenge.challengetecnicotechforb.Entities.Account;
+import com.challenge.challengetecnicotechforb.Entities.Transaction;
 import com.challenge.challengetecnicotechforb.Entities.User;
 import com.challenge.challengetecnicotechforb.Repositories.AccountRepository;
 import com.challenge.challengetecnicotechforb.Repositories.UserRepository;
+import com.challenge.challengetecnicotechforb.Security.Payload.TransactionResponse;
 import com.challenge.challengetecnicotechforb.Security.jwt.JwtService;
 
 import lombok.RequiredArgsConstructor;
@@ -53,13 +58,30 @@ public class AccountService {
   }
 
   public Account getAccountById(String accountId) {
-    return accountRepository.findById(accountId).orElse(null);
+    return accountRepository.findById(accountId).orElseThrow();
   }
-  
 
   public String getBalance(String token) {
     Account account = getAccountFromToken(token);
     return account.getBalance().toString();
+  }
+
+  public List<TransactionResponse> getTransactions(String token) {
+    Account account = getAccountFromToken(token);
+    List<Transaction> transactions = account.getTransactions();
+    transactions.sort(Comparator.comparing(Transaction::getDate).reversed());
+
+    return transactions.stream().map(transaction -> {
+      TransactionResponse transactionResponse = new TransactionResponse();
+      transactionResponse.setMonto(BigDecimal.valueOf(transaction.getAmount()));
+      transactionResponse.setFecha(transaction.getDate().toString());
+      transactionResponse.setDescripcion(transaction.getDescription());
+      transactionResponse.setOrigen(transaction.getAccount().getId());
+      transactionResponse.setDestino(transaction.getDestinationAccount().getId());
+
+      return transactionResponse;
+    }).collect(Collectors.toList());
+
   }
 
 }
