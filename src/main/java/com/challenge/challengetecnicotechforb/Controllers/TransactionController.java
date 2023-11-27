@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.challenge.challengetecnicotechforb.Security.Payload.TransactionRequest;
-import com.challenge.challengetecnicotechforb.Security.Payload.TransactionResponse;
+import com.challenge.challengetecnicotechforb.Entities.Dto.TransactionRequestDTO;
+import com.challenge.challengetecnicotechforb.Entities.Dto.TransactionResponseDTO;
 import com.challenge.challengetecnicotechforb.Services.TransactionService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,16 +17,18 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/api/transaction")
 public class TransactionController {
 
-    @Autowired
     private TransactionService transactionService;
 
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
+
     @PostMapping
-    public ResponseEntity<TransactionResponse> createTransaction(HttpServletRequest request,
-            @RequestBody TransactionRequest transaction) {
+    public ResponseEntity<TransactionResponseDTO> createTransaction(HttpServletRequest request,
+            @RequestBody TransactionRequestDTO transaction) {
         String token = request.getHeader("Authorization");
 
         return ResponseEntity.ok(transactionService.createTransaction(token, transaction.getIdDestino(),
                 transaction.getMonto(), transaction.getDescripcion()));
-
     }
 }

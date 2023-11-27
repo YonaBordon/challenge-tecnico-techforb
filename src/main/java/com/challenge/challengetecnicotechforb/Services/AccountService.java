@@ -12,9 +12,12 @@ import org.springframework.stereotype.Service;
 import com.challenge.challengetecnicotechforb.Entities.Account;
 import com.challenge.challengetecnicotechforb.Entities.Transaction;
 import com.challenge.challengetecnicotechforb.Entities.User;
+import com.challenge.challengetecnicotechforb.Entities.Dto.AccountDTO;
+import com.challenge.challengetecnicotechforb.Entities.Dto.TransactionResponseDTO;
+import com.challenge.challengetecnicotechforb.Mappers.AccountMapper;
+import com.challenge.challengetecnicotechforb.Mappers.TransactionMapper;
 import com.challenge.challengetecnicotechforb.Repositories.AccountRepository;
 import com.challenge.challengetecnicotechforb.Repositories.UserRepository;
-import com.challenge.challengetecnicotechforb.Security.Payload.TransactionResponse;
 import com.challenge.challengetecnicotechforb.Security.jwt.JwtService;
 
 import lombok.RequiredArgsConstructor;
@@ -66,22 +69,15 @@ public class AccountService {
     return account.getBalance().toString();
   }
 
-  public List<TransactionResponse> getTransactions(String token) {
+  public List<TransactionResponseDTO> getTransactions(String token) {
     Account account = getAccountFromToken(token);
     List<Transaction> transactions = account.getTransactions();
     transactions.sort(Comparator.comparing(Transaction::getDate).reversed());
 
-    return transactions.stream().map(transaction -> {
-      TransactionResponse transactionResponse = new TransactionResponse();
-      transactionResponse.setMonto(BigDecimal.valueOf(transaction.getAmount()));
-      transactionResponse.setFecha(transaction.getDate().toString());
-      transactionResponse.setDescripcion(transaction.getDescription());
-      transactionResponse.setOrigen(transaction.getAccount().getId());
-      transactionResponse.setDestino(transaction.getDestinationAccount().getId());
-
-      return transactionResponse;
-    }).collect(Collectors.toList());
-
+    return transactions
+        .stream()
+        .map(TransactionMapper::toTransactionResponseDTO)
+        .collect(Collectors.toList());
   }
 
 }

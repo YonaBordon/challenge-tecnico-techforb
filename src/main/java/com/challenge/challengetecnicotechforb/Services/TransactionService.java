@@ -3,22 +3,25 @@ package com.challenge.challengetecnicotechforb.Services;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.challenge.challengetecnicotechforb.Entities.Account;
 import com.challenge.challengetecnicotechforb.Entities.Transaction;
+import com.challenge.challengetecnicotechforb.Entities.Dto.TransactionResponseDTO;
+import com.challenge.challengetecnicotechforb.Mappers.TransactionMapper;
 import com.challenge.challengetecnicotechforb.Repositories.TransactionRepository;
-import com.challenge.challengetecnicotechforb.Security.Payload.TransactionResponse;
 
 @Service
 public class TransactionService {
-  @Autowired
   private TransactionRepository transactionRepository;
-  @Autowired
   private AccountService accountService;
 
-  public TransactionResponse createTransaction(String token, String destinationAccountId, BigDecimal amount,
+  public TransactionService(TransactionRepository transactionRepository, AccountService accountService) {
+    this.transactionRepository = transactionRepository;
+    this.accountService = accountService;
+  }
+
+  public TransactionResponseDTO createTransaction(String token, String destinationAccountId, BigDecimal amount,
       String description) {
     Account origin = accountService.getAccountFromToken(token);
 
@@ -30,7 +33,7 @@ public class TransactionService {
 
     Transaction transaction = new Transaction();
     transaction.setAccount(origin);
-    transaction.setAmount(amount.doubleValue());
+    transaction.setAmount(amount);
     transaction.setDate(LocalDate.now());
     transaction.setDescription(description);
     transaction.setDestinationAccount(destinationAccount);
@@ -42,8 +45,7 @@ public class TransactionService {
     accountService.save(destinationAccount);
     transactionRepository.save(transaction);
 
-    return new TransactionResponse(transaction.getAccount().getId(), destinationAccountId, amount, description,
-        transaction.getDate().toString());
+    return TransactionMapper.toTransactionResponseDTO(transaction);
   }
 
 }

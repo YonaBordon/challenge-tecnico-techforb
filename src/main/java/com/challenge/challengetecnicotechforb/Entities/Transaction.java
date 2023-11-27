@@ -1,5 +1,6 @@
 package com.challenge.challengetecnicotechforb.Entities;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -29,7 +30,7 @@ public class Transaction {
   private LocalDate date;
 
   @Column(name = "amount")
-  private Double amount;
+  private BigDecimal amount;
 
   @Column(name = "description")
   private String description;
