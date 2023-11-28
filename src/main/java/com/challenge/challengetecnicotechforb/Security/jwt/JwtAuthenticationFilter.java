@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.challenge.challengetecnicotechforb.Exception.AccessDeniedException;
+
 import org.springframework.util.StringUtils;
 
 import jakarta.servlet.FilterChain;
@@ -28,28 +31,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-       
-        final String token = getTokenFromRequest(request);
-        final String username;
 
-        if (token==null)
-        {
+        if (request.getRequestURI().startsWith("/api/user")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        username=jwtService.getUsernameFromToken(token);
+        final String token = getTokenFromRequest(request);
+        final String username;
 
-        if (username!=null && SecurityContextHolder.getContext().getAuthentication()==null)
-        {
-            UserDetails userDetails=userDetailsService.loadUserByUsername(username);
+        username = jwtService.getUsernameFromToken(token);
 
-            if (jwtService.isTokenValid(token, userDetails))
-            {
-                UsernamePasswordAuthenticationToken authToken= new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities());
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+            if (jwtService.isTokenValid(token, userDetails)) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities());
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -57,21 +57,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
         }
-        
+
         filterChain.doFilter(request, response);
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
-        final String authHeader=request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if(StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer "))
-        {
-            return authHeader.substring(7);
+        if (!StringUtils.hasText(authHeader)) {
+            throw new AccessDeniedException("El token no puede estar vacío.");
+        }
+
+        if (!authHeader.startsWith("Bearer ")) {
+            throw new AccessDeniedException("El token debe comenzar con Bearer.");
+        }
+
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7).trim();
         }
         return null;
     }
 
-
-
-    
 }

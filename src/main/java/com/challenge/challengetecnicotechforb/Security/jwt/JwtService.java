@@ -1,6 +1,7 @@
 package com.challenge.challengetecnicotechforb.Security.jwt;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,22 +10,27 @@ import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.challenge.challengetecnicotechforb.Exception.AccessDeniedException;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "586E3272357538782F413F4428472B4B6250655368566B597033733676397924";
+    private static final String SECRET_KEY = Encoders.BASE64.encode(
+            "megaultrasecretokeytttttttmegaultrasecretokeyttttttt".getBytes());
 
     public String getToken(UserDetails user) {
         return getToken(new HashMap<>(), user);
     }
 
     private String getToken(Map<String, Object> extraClaims, UserDetails user) {
+
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -41,6 +47,9 @@ public class JwtService {
     }
 
     public String getUsernameFromToken(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
         return getClaim(token, Claims::getSubject);
     }
 
@@ -50,6 +59,7 @@ public class JwtService {
     }
 
     private Claims getAllClaims(String token) {
+        token = token.trim();
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getKey())
@@ -67,8 +77,25 @@ public class JwtService {
         return getClaim(token, Claims::getExpiration);
     }
 
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return getExpiration(token).before(new Date());
+    }
+
+    public boolean validateToken(String token) {
+        if (token == null || token.isEmpty()) {
+            throw new AccessDeniedException("Token no puede ser nulo o vacío.");
+        }
+
+        if (!token.startsWith("Bearer ")) {
+            throw new AccessDeniedException("Token debe comenzar con Bearer.");
+        }
+
+        if (isTokenExpired(token)) {
+            throw new AccessDeniedException("Token vencido o inválido.");
+        }
+
+        return true;
+
     }
 
 }

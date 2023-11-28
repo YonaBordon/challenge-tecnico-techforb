@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 import com.challenge.challengetecnicotechforb.Entities.Account;
 import com.challenge.challengetecnicotechforb.Entities.Transaction;
 import com.challenge.challengetecnicotechforb.Entities.User;
-import com.challenge.challengetecnicotechforb.Entities.Dto.AccountDTO;
 import com.challenge.challengetecnicotechforb.Entities.Dto.TransactionResponseDTO;
-import com.challenge.challengetecnicotechforb.Mappers.AccountMapper;
 import com.challenge.challengetecnicotechforb.Mappers.TransactionMapper;
 import com.challenge.challengetecnicotechforb.Repositories.AccountRepository;
 import com.challenge.challengetecnicotechforb.Repositories.UserRepository;
@@ -56,6 +54,7 @@ public class AccountService {
   }
 
   public Account getAccountFromToken(String token) {
+
     String accountUser = jwtService.getUsernameFromToken(token);
     return findByUserName(accountUser);
   }
